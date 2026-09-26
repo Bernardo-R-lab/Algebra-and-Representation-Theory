@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Algebra, Representation &amp; Group Theory · University of Pretoria</title>
+<meta name="description" content="Research group in Algebra, Representation and Group Theory, Department of Mathematics and Applied Mathematics, University of Pretoria." />
+
+<!-- ============================================================
+     FONTS  (delete these 3 <link> lines for zero dependencies;
+     the CSS falls back to solid system fonts)
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   DESIGN TOKENS — re-theme the whole site from here
+   ============================================================ */
+:root {
+  --paper:      #f4f5f7;
+  --surface:    #ffffff;
+  --ink:        #16202b;
+  --ink-muted:  #55606c;
+  --ink-faint:  #8a929c;
+  --line:       #dde1e6;
+  --accent:     #17506b;
+  --accent-soft:#e5edf1;
+
+  --serif: "Spectral", Georgia, "Times New Roman", serif;
+  --sans:  "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --maxw: 1080px;
+  --pad: clamp(1.25rem, 5vw, 3rem);
+  --measure: 66ch;
+  --ease: cubic-bezier(.2, .6, .2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:      #10161d;
+    --surface:    #161e27;
+    --ink:        #e8ecf0;
+    --ink-muted:  #a9b3bd;
+    --ink-faint:  #6f7986;
+    --line:       #27313c;
+    --accent:     #63b3d1;
+    --accent-soft:#1a2a35;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 0 0 .5em;
+}
+h2 { font-size: clamp(1.6rem, 3.2vw, 2.1rem); }
+h3 { font-size: 1.3rem; }
+p  { margin: 0 0 1rem; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+.wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--pad); }
+.prose { max-width: var(--measure); }
+.section { padding-block: clamp(3.5rem, 8vw, 6rem); }
+.section + .section { border-top: 1px solid var(--line); }
+
+.section-head { margin-bottom: 2.5rem; }
+.section-head .no {
+  font-family: var(--serif); font-size: .95rem; color: var(--accent);
+  font-variant-numeric: tabular-nums; margin-bottom: .35rem;
+}
+.section-head p { color: var(--ink-muted); max-width: var(--measure); }
+
+/* NAV */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(8px);
+  border-bottom: 1px solid var(--line);
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.nav__inner { max-width: var(--maxw); margin-inline: auto; padding: .85rem var(--pad); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.brand { display: flex; align-items: center; gap: .65rem; color: var(--ink); font-weight: 500; }
+.brand:hover { text-decoration: none; }
+.brand__mark { width: 26px; height: 26px; flex: none; color: var(--accent); }
+.brand__text { font-family: var(--serif); font-size: 1.02rem; line-height: 1.1; }
+.brand__text span { display: block; font-family: var(--sans); font-size: .72rem; color: var(--ink-faint); letter-spacing: .02em; }
+
+.nav__links { display: flex; align-items: center; gap: 1.4rem; list-style: none; margin: 0; padding: 0; }
+.nav__links a { color: var(--ink-muted); font-size: .95rem; font-weight: 500; padding: .25rem 0; position: relative; }
+.nav__links a:hover { color: var(--ink); text-decoration: none; }
+.nav__links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1.5px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .25s var(--ease); }
+.nav__links a:hover::after, .nav__links a[aria-current="true"]::after { transform: scaleX(1); }
+.nav__links a[aria-current="true"] { color: var(--ink); }
+
+.nav__toggle { display: none; background: none; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); width: 42px; height: 38px; cursor: pointer; align-items: center; justify-content: center; }
+.nav__toggle svg { width: 20px; height: 20px; }
+
+@media (max-width: 820px) {
+  .nav__toggle { display: inline-flex; }
+  .nav__links {
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: var(--surface); border-bottom: 1px solid var(--line);
+    padding: .5rem var(--pad) 1rem; max-height: 0; overflow: hidden; transition: max-height .3s var(--ease);
+  }
+  .nav[data-open="true"] .nav__links { max-height: 70vh; }
+  .nav__links a { padding: .8rem 0; border-bottom: 1px solid var(--line); }
+  .nav__links a::after { display: none; }
+}
+
+/* HERO */
+.hero { position: relative; overflow: hidden; }
+.hero__inner { max-width: var(--maxw); margin-inline: auto; padding: clamp(3.5rem, 9vw, 7rem) var(--pad) clamp(3rem, 7vw, 5rem); position: relative; z-index: 2; }
+.hero .affil { color: var(--accent); font-weight: 500; font-size: .98rem; margin-bottom: 1.1rem; }
+.hero h1 { font-size: clamp(2.4rem, 6.2vw, 4.1rem); font-weight: 500; line-height: 1.04; max-width: 15ch; margin-bottom: 1.25rem; }
+.hero__lead { font-size: clamp(1.1rem, 2.2vw, 1.3rem); color: var(--ink-muted); max-width: 52ch; }
+.hero__stats { display: flex; flex-wrap: wrap; gap: 2.5rem; margin-top: 2.75rem; border-top: 1px solid var(--line); padding-top: 1.75rem; max-width: 46rem; }
+.stat .n { font-family: var(--serif); font-size: 1.9rem; line-height: 1; color: var(--ink); }
+.stat .l { color: var(--ink-muted); font-size: .9rem; margin-top: .35rem; max-width: 22ch; }
+
+.hero__motif {
+  position: absolute; z-index: 1; top: 0; right: max(-6rem, -8vw); bottom: 0;
+  width: min(46%, 30rem); pointer-events: none; color: var(--accent);
+  -webkit-mask-image: linear-gradient(to left, #000 55%, transparent);
+          mask-image: linear-gradient(to left, #000 55%, transparent);
+}
+.hero__motif svg { width: 100%; height: 100%; }
+.hero__motif .grid { stroke: currentColor; opacity: .16; }
+.hero__motif .cell { fill: currentColor; opacity: .5; }
+@media (max-width: 720px) { .hero__motif { display: none; } }
+
+/* RESEARCH THEMES */
+.themes { display: grid; gap: 0; }
+.theme { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 1.5rem 2.5rem; padding: 1.6rem 0; border-top: 1px solid var(--line); }
+.theme:last-child { border-bottom: 1px solid var(--line); }
+.theme h3 { margin: 0; font-size: 1.22rem; }
+.theme p { margin: 0; color: var(--ink-muted); }
+@media (max-width: 640px) { .theme { grid-template-columns: 1fr; gap: .4rem; } }
+
+.apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.75rem; margin-top: 2.75rem; }
+.app { border-left: 2px solid var(--accent); padding-left: 1rem; }
+.app h4 { font-family: var(--sans); font-weight: 600; font-size: .95rem; margin: 0 0 .3rem; }
+.app p { margin: 0; color: var(--ink-muted); font-size: .95rem; }
+
+/* MEMBERS */
+.members { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 3rem; }
+@media (max-width: 720px) { .members { grid-template-columns: 1fr; } }
+.member { padding: 1.75rem 0; border-top: 1px solid var(--line); }
+.member__head { display: flex; gap: 1rem; align-items: center; margin-bottom: .9rem; }
+.member__avatar { width: 58px; height: 58px; flex: none; border-radius: 10px; object-fit: cover; border: 1px solid var(--line); background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 1.15rem; font-weight: 500; letter-spacing: .02em; }
+.member__id { min-width: 0; }
+.member__role { color: var(--accent); font-size: .82rem; font-weight: 600; margin-bottom: .5rem; min-height: 1rem; }
+.member h3 { margin: 0 0 .15rem; }
+.member__title { color: var(--ink-faint); font-size: .92rem; }
+.member__fields { color: var(--ink-muted); font-size: .95rem; margin-bottom: .8rem; }
+.member__collab { color: var(--ink-faint); font-size: .86rem; margin-bottom: 1rem; }
+.member__collab b { color: var(--ink-muted); font-weight: 600; }
+.member__link { display: inline-flex; align-items: center; gap: .4rem; font-size: .92rem; font-weight: 500; }
+.member__link svg { width: 14px; height: 14px; }
+
+/* PUBLICATIONS */
+.filters { display: flex; flex-wrap: wrap; gap: .55rem; margin-bottom: 2.25rem; }
+.filter { font: inherit; font-size: .9rem; cursor: pointer; padding: .4rem .95rem; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink-muted); transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease); }
+.filter:hover { color: var(--ink); border-color: var(--ink-faint); }
+.filter[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (prefers-color-scheme: dark) { .filter[aria-pressed="true"] { color: #0b1218; } }
+
+.pubgroup { margin-bottom: 2.5rem; }
+.pubgroup > h3 { margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 1px solid var(--line); }
+.pubgroup ol { margin: 0; padding: 0; list-style: none; counter-reset: pub; }
+.pub { counter-increment: pub; position: relative; padding: .7rem 0 .7rem 2.4rem; border-bottom: 1px solid var(--line); font-size: .97rem; }
+.pub::before { content: counter(pub); position: absolute; left: 0; top: .78rem; font-family: var(--serif); font-size: .85rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+.pub .authors { color: var(--ink); }
+.pub .venue { color: var(--ink-muted); font-style: italic; }
+.pub__doi { margin-left: .5rem; font-size: .84rem; font-weight: 500; white-space: nowrap; }
+.pubgroup[hidden] { display: none; }
+
+/* NEWS */
+.news { display: grid; gap: 0; max-width: 52rem; }
+.news__item { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.5rem; padding: 1.4rem 0; border-top: 1px solid var(--line); }
+.news__item:last-child { border-bottom: 1px solid var(--line); }
+.news__date { color: var(--accent); font-size: .88rem; font-weight: 500; }
+.news__body h3 { font-size: 1.08rem; margin-bottom: .3rem; }
+.news__body p { margin: 0; color: var(--ink-muted); font-size: .95rem; }
+@media (max-width: 560px) { .news__item { grid-template-columns: 1fr; gap: .3rem; } }
+.tag { display: inline-block; font-family: var(--sans); font-size: .7rem; font-weight: 600; letter-spacing: .02em; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: .15rem .55rem; margin-left: .5rem; vertical-align: middle; }
+
+/* CONTACT + FOOTER */
+.contact-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; }
+@media (max-width: 720px) { .contact-grid { grid-template-columns: 1fr; gap: 2rem; } }
+.contact address { font-style: normal; color: var(--ink-muted); }
+.contact a { font-weight: 500; }
+.contact dt { color: var(--ink-faint); font-size: .82rem; margin-top: 1.1rem; }
+.contact dd { margin: .15rem 0 0; }
+.profiles { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .5rem; }
+.profiles a { border: 1px solid var(--line); border-radius: 8px; padding: .5rem .85rem; font-size: .9rem; color: var(--ink-muted); font-weight: 500; }
+.profiles a:hover { color: var(--ink); border-color: var(--ink-faint); text-decoration: none; }
+
+.foot { border-top: 1px solid var(--line); padding: 2.5rem var(--pad); padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px)); }
+.foot__inner { max-width: var(--maxw); margin-inline: auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; color: var(--ink-faint); font-size: .88rem; }
+</style>
+</head>
+
+<body>
+
+<!-- ================= NAV ================= -->
+<nav class="nav" id="nav" aria-label="Primary">
+  <div class="nav__inner">
+    <a class="brand" href="#top" aria-label="Home">
+      <svg class="brand__mark" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+        <rect x="1.5" y="1.5" width="21" height="21" rx="2" stroke="currentColor" stroke-width="1.2" opacity=".55"/>
+        <rect x="4" y="4" width="4" height="4" fill="currentColor"/>
+        <rect x="16" y="10" width="4" height="4" fill="currentColor"/>
+        <rect x="10" y="16" width="4" height="4" fill="currentColor"/>
+      </svg>
+      <span class="brand__text">Algebra, Representation &amp; Group Theory<span>University of Pretoria</span></span>
+    </a>
+    <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+    </button>
+    <ul class="nav__links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#members">Members</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#events">Events</a></li>
+      <li><a href="#news">News</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="hero__motif" aria-hidden="true">
+    <svg viewBox="0 0 320 320" preserveAspectRatio="xMidYMid slice">
+      <g class="grid" stroke-width="1" fill="none">
+        <path d="M40 0V320 M80 0V320 M120 0V320 M160 0V320 M200 0V320 M240 0V320 M280 0V320"/>
+        <path d="M0 40H320 M0 80H320 M0 120H320 M0 160H320 M0 200H320 M0 240H320 M0 280H320"/>
+        <rect x="0.5" y="0.5" width="319" height="319"/>
+      </g>
+      <g class="cell">
+        <rect x="80" y="0" width="40" height="40"/>
+        <rect x="200" y="40" width="40" height="40"/>
+        <rect x="0" y="80" width="40" height="40"/>
+        <rect x="280" y="120" width="40" height="40"/>
+        <rect x="120" y="160" width="40" height="40"/>
+        <rect x="240" y="200" width="40" height="40"/>
+        <rect x="40" y="240" width="40" height="40"/>
+        <rect x="160" y="280" width="40" height="40"/>
+      </g>
+    </svg>
+  </div>
+  <div class="hero__inner">
+    <p class="affil">Department of Mathematics and Applied Mathematics</p>
+    <h1>Algebra, Representation &amp; Group Theory</h1>
+    <p class="hero__lead">A research group at the University of Pretoria working across finite and infinite group theory, representation theory, algebraic coding theory, combinatorial design theory and non-associative algebras.</p>
+    <div class="hero__stats">
+      <div class="stat"><div class="n">4</div><div class="l">researchers, from group theory to coding theory</div></div>
+      <div class="stat"><div class="n">10+</div><div class="l">countries in our active collaboration network</div></div>
+      <div class="stat"><div class="n">#1</div><div class="l">in Mathematics among South African universities (QS)</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= ABOUT ================= -->
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="section-head"><div class="no">01 — About</div><h2>Turning symmetry into linear algebra</h2></div>
+    <div class="prose">
+      <p>Representation theory studies how abstract groups act as linear transformations of vector spaces, translating group-theoretic questions into the familiar language of matrices and linear algebra. It is one of the most active areas of modern mathematics, with a strongly interdisciplinary character.</p>
+      <p>Our group brings together a critical mass of researchers who share a common foundation: deductive reasoning applied to a strongly axiomatic setting. The Department of Mathematics and Applied Mathematics at the University of Pretoria hosts one of the strongest cohorts in algebra and representation theory in South Africa, and several of our themes are pursued nowhere else on the continent. Our work sits at the meeting point of algebra, combinatorics, computational group theory and algebraic coding theory, and moves freely between them. While much of our work centres on finite groups and their representations, the group also pursues combinatorial and geometric group theory, where the objects of study are typically infinite.</p>
+    </div>
+    <div class="apps">
+      <div class="app"><h4>Physics</h4><p>Symmetry governs quantum systems, from the hydrogen atom to the harmonic oscillator.</p></div>
+      <div class="app"><h4>Chemistry</h4><p>Representations decompose the vibrations of symmetric molecules into normal modes.</p></div>
+      <div class="app"><h4>Coding theory</h4><p>Ideals in group algebras yield error-correcting codes for reliable data transmission.</p></div>
+      <div class="app"><h4>Cryptography</h4><p>Group representations underpin robust and homomorphic secret-sharing schemes.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESEARCH ================= -->
+<section class="section" id="research">
+  <div class="wrap">
+    <div class="section-head"><div class="no">02 — Research</div><h2>Themes we work in</h2><p>Six connected subdisciplines, open to neighbouring areas whose questions overlap with ours.</p></div>
+    <div class="themes">
+      <div class="theme"><h3>Finite Group Theory</h3><p>Structure, products and characterisations of finite groups, including questions on Sylow numbers and vanishing elements.</p></div>
+      <div class="theme"><h3>Character Theory of Finite Groups</h3><p>Character degrees, codegrees and vanishing sets as invariants that constrain the structure of a group.</p></div>
+      <div class="theme"><h3>Representation Theory of Finite Groups</h3><p>Ordinary and modular representations, characters of Chevalley groups, and their links to finite geometry.</p></div>
+      <div class="theme"><h3>Algebraic Coding Theory</h3><p>Error-correcting, self-dual and LCD codes built from group algebras, permutation groups and designs.</p></div>
+      <div class="theme"><h3>Combinatorial Design Theory</h3><p>Designs from maximal subgroups and conjugacy classes, orbit matrices and tactical decompositions.</p></div>
+      <div class="theme"><h3>Non-associative Algebras</h3><p>Axial algebras of Jordan and Monster type, Matsuo algebras and their flip subalgebras.</p></div>
+      <div class="theme"><h3>Combinatorial &amp; Geometric Group Theory</h3><p>Cyclically presented groups, hyperbolic groups and free products — combinatorial and geometric methods for infinite groups.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MEMBERS (rendered from data) ================= -->
+<section class="section" id="members">
+  <div class="wrap">
+    <div class="section-head"><div class="no">03 — Members</div><h2>The group</h2><p>Four researchers, each connected to an international network of collaborators.</p></div>
+    <div class="members" id="membersGrid"></div>
+  </div>
+</section>
+
+<!-- ================= PUBLICATIONS (rendered from data) ================= -->
+<section class="section" id="publications">
+  <div class="wrap">
+    <div class="section-head"><div class="no">04 — Publications</div><h2>Recent publications</h2><p>A selection from 2019–2025. Filter by member, or view the full list.</p></div>
+    <div class="filters" id="pubFilters" role="group" aria-label="Filter publications by member"></div>
+    <div id="pubGroups"></div>
+  </div>
+</section>
+
+<!-- ================= EVENTS (rendered from data) ================= -->
+<section class="section" id="events">
+  <div class="wrap">
+    <div class="section-head"><div class="no">05 — Events</div><h2>Workshops &amp; schools</h2><p>Meetings we are organising or hosting. Edit these in the EVENTS block of the content section below.</p></div>
+    <div class="news" id="eventsList"></div>
+  </div>
+</section>
+
+<!-- ================= NEWS (rendered from data) ================= -->
+<section class="section" id="news">
+  <div class="wrap">
+    <div class="section-head"><div class="no">06 — News</div><h2>Announcements</h2><p>Edit the entries in the NEWS block of the content section below.</p></div>
+    <div class="news" id="newsList"></div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section contact" id="contact">
+  <div class="wrap">
+    <div class="section-head"><div class="no">07 — Contact</div><h2>Get in touch</h2></div>
+    <div class="contact-grid">
+      <div>
+        <address>
+          Department of Mathematics and Applied Mathematics<br />
+          University of Pretoria<br />
+          Private Bag X20, Hatfield 0028<br />
+          Pretoria, South Africa
+        </address>
+        <dl>
+          <div id="emailRow">
+            <dt>Email</dt>
+            <dd><a id="contactEmail" href="#">—</a></dd>
+          </div>
+          <dt>Enquiries</dt>
+          <dd>Prospective MSc, PhD and postdoctoral applicants are welcome to reach out to any member through their research profile.</dd>
+        </dl>
+      </div>
+      <div>
+        <p style="color:var(--ink-muted); font-size:.95rem;">Individual research profiles and academic pages:</p>
+        <div class="profiles" id="contactProfiles"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot__inner">
+    <span>Algebra, Representation &amp; Group Theory — University of Pretoria</span>
+    <span>© <span id="year"></span></span>
+  </div>
+</footer>
+
+
+<!-- ============================================================================
+     ██  CONTENT — THIS IS THE ONLY PART MEMBERS NEED TO EDIT  ██
+     ----------------------------------------------------------------------------
+     Everything the site displays about people, papers and news lives below.
+     Each member has their OWN clearly-fenced block. To update your section:
+       • find the block with your surname,
+       • change the text between the quotes, or
+       • add a new { ... } entry to your "publications" list.
+     Do NOT edit anything above this comment (that is layout, not content).
+
+     A publication entry looks like this — copy one, change the fields:
+       { a: "Authors",  t: "Title of the paper",
+         v: "Journal name",  i: "vol(issue) (year), pages",
+         doi: "https://doi.org/..."  }        <-- doi is optional; delete the
+                                                   line if there is no link.
+
+     PHOTOS: to show a member photo, upload a square image into an "images"
+     folder in the repository, then set that member's  photo: "images/name.jpg".
+     With no photo, the member's initials are shown instead.
+     ============================================================================ -->
+<script>
+const SITE = {
+
+  /* Group email shown in the Contact section */
+  email: "",   /* No group email yet. Put one between the quotes (e.g. "algebra@up.ac.za") and the Email line reappears automatically. */
+
+  members: [
+
+    /* ===================== RODRIGUES ===================== */
+    {
+      key: "rodrigues",
+      role: "Director",
+      name: "Prof Bernardo G. Rodrigues",
+      initials: "BR",                     /* shown when there is no photo */
+      photo: "",                          /* e.g. "images/rodrigues.jpg" */
+      short: "Rodrigues",                 /* label used on the filter chip + publication heading */
+      title: "Professor · NRF-rated researcher (C1)",
+      fields: "Algebraic coding theory, combinatorial design theory, finite group theory and non-associative algebras.",
+      collaborators: "S. Shpectorov & C. Parker (Birmingham), V. Crnković (Rijeka), W. Knapp (Tübingen), L. Storme (Ghent), D. Leemans (ULB) and P. Solé (Aix-Marseille).",
+      profile: "https://www.up.ac.za/mathematics-and-applied-mathematics/prof-b-bernardo-rodrigues",
+      publications: [
+        { a: "L. S. Mabena, S. Y. Madanha and B. G. Rodrigues", t: "A characterization of some finite quasisimple groups using their character codegrees", v: "Quaestiones Mathematicae", i: "(to appear)" },
+        { a: "B. G. Rodrigues and S. Shpectorov", t: "Radicals in flip subalgebras of Matsuo algebras", v: "Arab. Math. Journal", i: "(to appear)" },
+        { a: "B. G. Rodrigues and P. Solé", t: "Primitive rank 3 groups, binary codes, and 3-designs", v: "Des. Codes and Cryptogr.", i: "(to appear)" },
+        { a: "I. P. Iroanya, S. Y. Madanha and B. G. Rodrigues", t: "Non-solvable groups with few vanishing elements", v: "Comm. in Algebra", i: "(to appear)" },
+        { a: "P. Mafuta, S. Mukwembi, S. Munyira and B. G. Rodrigues", t: "On conjectures by Kleitman, Griggs and Shastri", v: "Bull. Korean Math. Soc.", i: "62(3) (2025), 631–639" },
+        { a: "V. M. Crnković, I. Novak and B. G. Rodrigues", t: "LCD codes constructed from weakly q-self-orthogonal 1-designs", v: "Adv. Math. Comm.", i: "19(4) (2025), 1041–1056" },
+        { a: "B. G. Rodrigues", t: "Some two-weight codes invariant under the 3-fold covers of the Mathieu group M₂₂ and Aut M₂₂", v: "J. Algebra Appl.", i: "23(7) (2024), 2550079" },
+        { a: "B. G. Rodrigues and F. G. Russo", t: "A note on the exterior centralizers and the probability of commuting pairs", v: "Publ. Math. Debrecen", i: "104(3–4) (2024), 443–455" },
+        { a: "B. G. Rodrigues and F. G. Russo", t: "A characterization of procyclic groups via complete exterior degree", v: "Mathematics", i: "12(7) (2024), 1018" },
+        { a: "M. Ajmal, M. U. Rehman and B. G. Rodrigues", t: "Improved asymptotically optimal error-correcting codes for avoidance crosstalk type-IV on-chip data buses", v: "Comp. Appl. Math.", i: "42(4) (2023), 150" },
+        { a: "M. R. Darafsheh, B. G. Rodrigues and A. Saeidi", t: "On linear codes constructed from finite groups with a trivial Schur multiplier", v: "Math. Commun.", i: "28(1) (2023), 85–104" },
+        { a: "W. Knapp and B. G. Rodrigues", t: "On the binary codes of length 552 which admit the simple group Co₃ as a transitive permutation group", v: "Commun. in Algebra", i: "51(4) (2023), 1451–1461" },
+        { a: "J. D. Key and B. G. Rodrigues", t: "Minimal PD-sets for codes associated with the graphs Q₂ᵐ, m even", v: "Appl. Algebra Eng. Commun. Comput.", i: "34(1) (2023), 57–66" },
+        { a: "X. Mbaale, B. G. Rodrigues and S. Zandi", t: "Designs from maximal subgroups and conjugacy classes of PSL(2,q), q odd", v: "AUT J. Math. Com.", i: "4(1) (2023), 47–55" },
+        { a: "J. D. Key and B. G. Rodrigues", t: "Codes from m-ary n-cubes Qⁿₘ: a survey", v: "AUT J. Math. Com.", i: "4(1) (2023), 1–15" },
+        { a: "P. Mafuta, S. Mukwembi and B. G. Rodrigues", t: "A note on connected domination number and leaf number", v: "Discrete Mathematics", i: "346(2) (2023), 113228" },
+        { a: "B. G. Rodrigues", t: "On some projective triply-even binary codes invariant under the Conway group Co₁", v: "Int. J. Group Theory", i: "11(1) (2022), 23–35" },
+        { a: "W. D. Knapp and B. G. Rodrigues", t: "A useful tool for constructing linear codes", v: "J. Algebra", i: "585 (2021), 422–446" },
+        { a: "X. Mbaale and B. G. Rodrigues", t: "Symmetric 1-designs from PGL₂(q), for q an odd prime power", v: "Glasnik Matematički", i: "56(76) (2021), 1–15" },
+        { a: "B. G. Rodrigues and F. G. Russo", t: "The exterior degree of finite simple groups", v: "Commun. in Algebra", i: "49(6) (2021), 2707–2721" },
+        { a: "X. Mbaale and B. G. Rodrigues", t: "Symmetric 1-designs from PSL₂(q), for q an odd prime power", v: "Transactions on Combin.", i: "10(1) (2021), 43–61" },
+        { a: "G. Amery, S. Gomani and B. G. Rodrigues", t: "Designs and binary codes from maximal subgroups and conjugacy classes of M₁₁", v: "Math. Commun.", i: "26 (2021), 159–175" },
+        { a: "J. D. Key and B. G. Rodrigues", t: "Binary codes from m-ary n-cubes Qⁿₘ", v: "Adv. Math. Comm.", i: "15(3) (2021), 507–524" },
+        { a: "D. Crnković, N. Mostarc, B. G. Rodrigues and L. Storme", t: "s-PD-sets for codes from projective planes PG(2,2ʰ), 5<h<9", v: "Adv. Math. Comm.", i: "15(3) (2021), 423–440" },
+        { a: "D. Crnković, R. Egan, B. G. Rodrigues and A. Švob", t: "LCD codes from weighing matrices", v: "Appl. Algebra Eng. Commun. Comput.", i: "32(2) (2021), 175–189" },
+        { a: "B. G. Rodrigues", t: "On the classification of binary self-dual codes admitting imprimitive rank-3 permutation groups", v: "Appl. Algebra Eng. Commun. Comput.", i: "32(2) (2021), 113–134" },
+        { a: "J. Moori, B. G. Rodrigues, A. Saeidi and S. Zandi", t: "Designs from maximal subgroups and conjugacy classes of Ree groups", v: "Adv. Math. Comm.", i: "14(4) (2020), 603–611" },
+        { a: "S. Y. Madanha and B. G. Rodrigues", t: "Finite groups with some restriction on the vanishing set", v: "Commun. in Algebra", i: "48(12) (2020), 5474–5481" }
+      ]
+    },
+
+    /* ===================== MADANHA ===================== */
+    {
+      key: "madanha",
+      role: "Co-Director",
+      name: "Dr Sesuai Y. Madanha",
+      initials: "SM",
+      photo: "",                          /* e.g. "images/madanha.jpg" */
+      short: "Madanha",
+      title: "Senior Lecturer · NRF-rated researcher (Y2)",
+      fields: "Finite group theory, character theory of finite groups and algebra.",
+      collaborators: "A. Ballester-Bolinches (Valencia), J. Cossey (ANU) and T. Mudziiri Shumba (University of Johannesburg).",
+      profile: "https://www.up.ac.za/nga-mass/dr-sesuai-yash-madanha",
+      publications: [
+        { a: "S. Y. Madanha, X. Mbaale and T. Mudziiri Shumba", t: "Finite groups with few character values that are not character degrees", v: "J. Pure Appl. Algebra", i: "229(7) (2025), 107969" },
+        { a: "A. Ballester-Bolinches, S. Y. Madanha, T. Mudziiri Shumba and M. C. Pedraza-Aguilera", t: "Generalised mutually permutable products and saturated formations II", v: "Bull. Aust. Math. Soc.", i: "110(2) (2024), 313–323" },
+        { a: "S. Y. Madanha", t: "Solvability and supersolvability criteria related to character codegrees", v: "J. Algebra Appl.", i: "23(10) (2024), 2450167" },
+        { a: "A. Ballester-Bolinches, J. Cossey, S. Y. Madanha and M. C. Pedraza-Aguilera", t: "On totally semipermutable products of finite groups", v: "Acta Math. Hungar.", i: "172 (2024), 161–169" },
+        { a: "A. Ballester-Bolinches, S. Y. Madanha, M. C. Pedraza-Aguilera and X. Wu", t: "On some products of finite groups", v: "Proc. Edinb. Math. Soc.", i: "66 (2023), 89–99" },
+        { a: "S. Y. Madanha", t: "Codegrees and element orders of almost simple groups", v: "Commun. in Algebra", i: "51(7) (2023), 3143–3151" },
+        { a: "A. Ballester-Bolinches, S. Y. Madanha, R. Esteban-Romero and M. C. Pedraza-Aguilera", t: "Some products of subgroups and vanishing conjugacy class sizes", v: "Bull. Aust. Math. Soc.", i: "107(2) (2023), 271–275" },
+        { a: "S. Y. Madanha", t: "Vanishing elements and Sylow subgroups", v: "Quaestiones Mathematicae", i: "45(9) (2022), 1363–1372" },
+        { a: "A. Ballester-Bolinches, S. Y. Madanha, T. Mudziiri Shumba and M. C. Pedraza-Aguilera", t: "On certain products of permutable subgroups", v: "Bull. Aust. Math. Soc.", i: "105 (2022), 278–285" },
+        { a: "S. Y. Madanha", t: "Finite groups with few character values", v: "Communications in Algebra", i: "50(1) (2022), 308–312" },
+        { a: "A. Ballester-Bolinches, S. Y. Madanha and M. C. Pedraza-Aguilera", t: "Generalised mutually permutable products and saturated formations", v: "J. Algebra", i: "595 (2022), 434–443" },
+        { a: "S. Y. Madanha", t: "Normalisers in some products of finite groups", v: "Adv. Group Theory Appl.", i: "12 (2021), 29–34" },
+        { a: "S. Y. Madanha", t: "Average number of zeros of characters of finite groups", v: "J. Algebra", i: "579 (2021), 353–364" },
+        { a: "S. Y. Madanha", t: "Weakly totally permutable products and Fitting classes", v: "Int. J. Group Theory", i: "10(1) (2021), 31–38" },
+        { a: "S. Y. Madanha", t: "On the orders of vanishing elements of finite groups", v: "J. Pure Appl. Algebra", i: "225 (2021), 106654" }
+      ]
+    },
+
+    /* ===================== LE ===================== */
+    {
+      key: "le",
+      role: "Member",
+      name: "Dr Tung Le",
+      initials: "TL",
+      photo: "",                          /* e.g. "images/le.jpg" */
+      short: "Le",
+      title: "Senior Lecturer",
+      fields: "Representation theory of finite groups, Chevalley groups and character theory.",
+      collaborators: "F. Himstedt (TU Munich), S. Goodwin (Birmingham) and H. Tong-Viet (Binghamton).",
+      profile: "https://www.up.ac.za/mathematics-and-applied-mathematics/dr-t-tung-le",
+      publications: [
+        { a: "T. Le and B. G. Rodrigues", t: "On some codes from rank-3 representations of the simple Chevalley group G₂(q)", v: "Adv. Math. Comm.", i: "17(1) (2023), 207–226" },
+        { a: "T. Le, K. Magaard and A. Paolini", t: "On the characters of Sylow p-subgroups of finite Chevalley groups G(pᶠ) for arbitrary primes", v: "Math. Comp.", i: "89(323) (2020), 1501–1524" }
+      ]
+    },
+
+    /* ===================== CHINYERE ===================== */
+    {
+      key: "chinyere",
+      role: "Member",
+      name: "Dr Ihechukwu Chinyere",
+      initials: "IC",
+      photo: "",                          /* e.g. "images/chinyere.jpg" */
+      short: "Chinyere",
+      title: "Lecturer",
+      fields: "Combinatorial and geometric group theory, cyclically presented and hyperbolic groups.",
+      collaborators: "G. Williams (Essex), B. O. Bainson (KNUST, Ghana) and J. Howie (Heriot-Watt).",
+      profile: "https://www.up.ac.za/mathematics-and-applied-mathematics/dr-i-ihechukwu-chinyere",
+      publications: [
+        { a: "I. Chinyere and G. Williams", t: "Redundant relators in cyclic presentations of groups", v: "J. Group Theory", i: "26 (2023), 1095–1126" },
+        { a: "I. Chinyere and G. Williams", t: "Generalized polygons and star graphs of cyclic presentations of groups", v: "J. Combin. Theory Ser. A", i: "190 (2022), 105638" },
+        { a: "I. Chinyere and G. Williams", t: "Hyperbolicity of T(6) cyclically presented groups", v: "Groups Geom. Dyn.", i: "16(1) (2022), 341–361" },
+        { a: "I. Chinyere and G. Williams", t: "Fractional Fibonacci groups with an odd number of generators", v: "Topology and its Applications", i: "312 (2022), 108083" },
+        { a: "I. Chinyere and B. O. Bainson", t: "Perfect Prishchepov groups", v: "J. Algebra", i: "588 (2021), 515–532" },
+        { a: "I. Chinyere and G. Williams", t: "Hyperbolic groups of Fibonacci type and T(5) cyclically presented groups", v: "J. Algebra", i: "580 (2021), 104–126" },
+        { a: "I. Chinyere", t: "Structure of words with short 2-length in a free product of groups", v: "J. Algebra", i: "519 (2019), 312–324" }
+      ]
+    }
+
+  ],
+
+  /* ===================== EVENTS ===================== */
+  /* Workshops, schools and conferences. Soonest first.
+     Optional fields:  tag: "Tentative"     -> small pill beside the title
+                       link: "https://..."   -> adds a "Details" link          */
+  events: [
+    { date: "Dec 2025 / mid-2026", tag: "Tentative",
+      title: "Workshop in Combinatorial Group Theory",
+      body: "An LMS-funded workshop organised by I. Chinyere. Targeting December 2025, or the first-semester break in 2026 if a suitable slot cannot be found this year." },
+    { date: "2025–26",
+      title: "Programme on non-associative algebras and modular representation theory",
+      body: "Linking algebraic codes and finite geometries, with early-career academics and graduate students from Gauteng, North-West, Limpopo and KwaZulu-Natal." },
+    { date: "2026–27",
+      title: "Schools in algebra and coding theory",
+      body: "Planned activities include a CIMPA Research School, a Winter School in Algebra, and a Summer School in Finite Groups and Error-Correcting Codes." }
+  ],
+
+  /* ===================== NEWS ===================== */
+  /* Announcements: visits, awards, appointments, new papers. Newest first. */
+  news: [
+    { date: "Sep 2025", title: "Visiting researchers from the UK",
+      body: "Two invited experts join the department for a research visit, including a public lecture and a departmental seminar, alongside a joint London Mathematical Society–South African Mathematical Society meeting." }
+  ]
+};
+/* ==========================  END OF EDITABLE CONTENT  ========================== */
+
+
+/* The code below renders the data above. No need to edit it. */
+(function () {
+  "use strict";
+
+  /* Escape user-entered text so characters like &, < and > display correctly */
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  /* ---- Members ---- */
+  var arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.getElementById("membersGrid").innerHTML = SITE.members.map(function (m) {
+    var link = m.profile
+      ? '<a class="member__link" href="' + esc(m.profile) + '" target="_blank" rel="noopener">Research profile ' + arrow + '</a>'
+      : "";
+    var avatar = m.photo
+      ? '<img class="member__avatar" src="' + esc(m.photo) + '" alt="' + esc(m.name) + '" loading="lazy" />'
+      : '<div class="member__avatar" aria-hidden="true">' + esc(m.initials || "") + '</div>';
+    return '<article class="member">' +
+      '<div class="member__head">' + avatar +
+        '<div class="member__id">' +
+          '<div class="member__role">' + esc(m.role) + '</div>' +
+          '<h3>' + esc(m.name) + '</h3>' +
+          '<div class="member__title">' + esc(m.title) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<p class="member__fields">' + esc(m.fields) + '</p>' +
+      '<p class="member__collab"><b>Collaborators include</b> ' + esc(m.collaborators) + '</p>' +
+      link +
+      '</article>';
+  }).join("");
+
+  /* ---- Publications: filter chips + grouped lists ---- */
+  var filtersEl = document.getElementById("pubFilters");
+  var groupsEl = document.getElementById("pubGroups");
+
+  var chips = ['<button class="filter" data-filter="all" aria-pressed="true">All</button>'];
+  SITE.members.forEach(function (m) {
+    chips.push('<button class="filter" data-filter="' + esc(m.key) + '" aria-pressed="false">' + esc(m.short) + '</button>');
+  });
+  filtersEl.innerHTML = chips.join("");
+
+  groupsEl.innerHTML = SITE.members.map(function (m) {
+    var items = m.publications.map(function (p) {
+      var doi = p.doi ? ' <a class="pub__doi" href="' + esc(p.doi) + '" target="_blank" rel="noopener">DOI</a>' : "";
+      return '<li class="pub"><span class="authors">' + esc(p.a) + '</span> ' + esc(p.t) +
+        '. <span class="venue">' + esc(p.v) + '</span> ' + esc(p.i) + '.' + doi + '</li>';
+    }).join("");
+    return '<div class="pubgroup" data-member="' + esc(m.key) + '">' +
+      '<h3>' + esc(m.short) + '</h3><ol>' + items + '</ol></div>';
+  }).join("");
+
+  var filters = filtersEl.querySelectorAll(".filter");
+  var groups = groupsEl.querySelectorAll(".pubgroup");
+  filters.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var want = btn.getAttribute("data-filter");
+      filters.forEach(function (b) { b.setAttribute("aria-pressed", String(b === btn)); });
+      groups.forEach(function (g) {
+        g.hidden = !(want === "all" || g.getAttribute("data-member") === want);
+      });
+    });
+  });
+
+  /* ---- Events ---- */
+  document.getElementById("eventsList").innerHTML = SITE.events.map(function (e) {
+    var tag = e.tag ? ' <span class="tag">' + esc(e.tag) + '</span>' : "";
+    var link = e.link ? ' <a href="' + esc(e.link) + '" target="_blank" rel="noopener">Details</a>' : "";
+    return '<div class="news__item">' +
+      '<div class="news__date">' + esc(e.date) + '</div>' +
+      '<div class="news__body"><h3>' + esc(e.title) + tag + '</h3><p>' + esc(e.body) + link + '</p></div>' +
+      '</div>';
+  }).join("");
+
+  /* ---- News ---- */
+  document.getElementById("newsList").innerHTML = SITE.news.map(function (n) {
+    return '<div class="news__item">' +
+      '<div class="news__date">' + esc(n.date) + '</div>' +
+      '<div class="news__body"><h3>' + esc(n.title) + '</h3><p>' + esc(n.body) + '</p></div>' +
+      '</div>';
+  }).join("");
+
+  /* ---- Contact ---- */
+  var email = document.getElementById("contactEmail");
+  if (SITE.email) {
+    email.textContent = SITE.email;
+    email.setAttribute("href", "mailto:" + SITE.email);
+  } else {
+    document.getElementById("emailRow").hidden = true;
+  }
+  document.getElementById("contactProfiles").innerHTML = SITE.members.map(function (m) {
+    return '<a href="' + esc(m.profile) + '" target="_blank" rel="noopener">' + esc(m.short) + '</a>';
+  }).join("");
+
+  /* ---- Footer year ---- */
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ---- Mobile menu ---- */
+  var nav = document.getElementById("nav");
+  var toggle = document.getElementById("navToggle");
+  toggle.addEventListener("click", function () {
+    var open = nav.getAttribute("data-open") === "true";
+    nav.setAttribute("data-open", String(!open));
+    toggle.setAttribute("aria-expanded", String(!open));
+  });
+  document.getElementById("navLinks").addEventListener("click", function (e) {
+    if (e.target.tagName === "A") {
+      nav.setAttribute("data-open", "false");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  /* ---- Active nav link on scroll ---- */
+  var linkFor = {};
+  document.querySelectorAll(".nav__links a").forEach(function (a) {
+    linkFor[a.getAttribute("href").slice(1)] = a;
+  });
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var link = linkFor[entry.target.id];
+      if (!link) return;
+      if (entry.isIntersecting) {
+        Object.values(linkFor).forEach(function (l) { l.removeAttribute("aria-current"); });
+        link.setAttribute("aria-current", "true");
+      }
+    });
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  document.querySelectorAll("main section[id]").forEach(function (s) { observer.observe(s); });
+})();
+</script>
+
+</body>
+</html>
